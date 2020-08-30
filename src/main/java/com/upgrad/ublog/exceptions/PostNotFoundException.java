@@ -6,9 +6,14 @@ package com.upgrad.ublog.exceptions;
  *  parameter and passes it to its base class.
  */
 
-public class PostNotFoundException {
+public class PostNotFoundException extends Exception{
 
-    /*public static void main(String[] args) {
+    PostNotFoundException(String message) {
+        super(message);
+    }
+
+    /*
+    public static void main(String[] args) {
 		try {
 			throw new PostNotFoundException("Custom Message");
 		} catch (PostNotFoundException e) {
