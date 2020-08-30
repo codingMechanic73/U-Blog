@@ -15,6 +15,26 @@
 	(Hint: You need to handle NullPointerException.)
 	(Hint: Make use of the email id stored in the session object to check if user is logged in or not.)
 -->
+<%!
+    String email = "";
+    String userName = "";
+    PostDTO postDTO;
+%>
+
+<%
+    try {
+        postDTO = (PostDTO)request.getAttribute("postDTO");
+        System.out.println(postDTO.getEmailId() + "eamil");
+        email = (String)session.getAttribute("email");
+        int endIndex = email.indexOf("@");
+        userName = email.substring(0, endIndex);
+        if (postDTO.getEmailId() == null) {
+            response.sendRedirect("/index.jsp");
+        }
+    } catch (NullPointerException e) {
+        response.sendRedirect("/index.jsp");
+    }
+%>
 
 <!--
     TODO: 4.25. If the user is logged in then display the string before @ in the user email id
@@ -31,4 +51,65 @@
         3. Use the table tag to align the fields.
         4. Provide a link to the "Home Page".
         5. You also need to handle "NullPointerException".
+-->
+<html>
+<head>
+    <title>View Post After Creation</title>
+</head>
+<body>
+    <span>Logged in as </span> <%=userName %>
+    </br>
+    </br>
+    <table>
+        <tr>
+            <td>
+            <label for="email">User Email:</label>
+            </td>
+            <td>
+            <span name="email"><%=postDTO.getEmailId()%> </span>
+            </td>
+        </tr>
+        <tr>
+            <td>
+            <label for="blog-title">Blog Title:</label>
+            </td>
+            <td>
+            <span name="blog-title"><%=postDTO.getTitle()%> </span>
+            </td>
+        </tr>
+        <tr>
+            <td>
+            <label for="blog-tag">Blog Tag:</label>
+            </td>
+            <td>
+            <span name="blog-tag"><%=postDTO.getTag()%> </span>
+            </td>
+        </tr>
+        <tr>
+            <td>
+            <label for="blog-desc">Blog Description:</label>
+            </td>
+            <td>
+            <span name="blog-desc"><%=postDTO.getDescription()%> </span>
+            </td>
+        </tr>
+         <tr>
+            <td>
+            <label for="blog-time">Blog Description:</label>
+            </td>
+            <td>
+            <span name="blog-time"><%=postDTO.getTimestamp().toString()%> </span>
+            </td>
+        </tr>
+        </form>
+    </table>
+    <a href="/Home.jsp">Home</a>
+</body>
+</html>
+
+
+
+<!--
+    TODO
+    postDTO.getEmail() throws error in html
 -->

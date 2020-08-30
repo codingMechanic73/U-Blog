@@ -14,6 +14,13 @@
 	the session object when the user successfully signs in or sign up.)
 -->
 
+<%
+    String email = (String)session.getAttribute("email");
+    if (email != null) {
+        request.getRequestDispatcher("/Home.jsp").forward(request, response);
+    }
+%>
+
 <!--
 	TODO: 4.4. Design the "Sign In / Sign Up" page with following properties.
 	    1. Title of the page should be "Sign In / Sign Up"
@@ -29,6 +36,36 @@
         8. Provide "Sign In" and "Sign Up" submit buttons.
 -->
 
+<html>
+    <head>
+        <title>Sign In / Sign Up</title>
+    </head>
+    <body>
+        <form action="/ublog/user" method="POST">
+            <table>
+                <tr>
+                    <td>
+                        <label for="email">User Email:</label>
+                    </td>
+                    <td>
+                        <input type="email" name="email" placeholder="example@email.com" required />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="password">Password:</label>
+                    </td>
+                    <td>
+                        <input type="password" name="password" placeholder="********" />
+                    </td>
+                </tr>
+            </table>
+            <input type="submit" value="Sign In" name="buttonType"/>
+            <input type="submit" value="Sign Up" name="buttonType"/>
+        </form>
+    </body>
+</html>
+
 <!--
     TODO: 4.12. Write the Java code to display the error message present in the request object. The
     error message should be displayed below the Sign In and Sing Up buttons. These error messages
@@ -37,3 +74,10 @@
     email address which is not registered in the database. The java code should be able to print
     all such kinds of error messages.
 -->
+<%! String error = ""; %>
+<%
+    error = (String)request.getAttribute("passwordError");
+    if (error == null) {error = "";}
+%>
+
+<%=error %>

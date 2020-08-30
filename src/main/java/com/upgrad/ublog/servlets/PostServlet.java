@@ -40,6 +40,16 @@ package com.upgrad.ublog.servlets;
  *  Print the "System.getProperty("user.dir")" to know where the log file is created.
  */
 
+import com.upgrad.ublog.dto.PostDTO;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.IOException;
+import java.time.LocalDateTime;
+
 /**
  * TODO 9.1: Modify the existing code such that the following two operations occur simultaneously on
  *  two independent threads.
@@ -47,6 +57,29 @@ package com.upgrad.ublog.servlets;
  *  thread2: Writing logs into the file
  */
 
-public class PostServlet {
+public class PostServlet extends HttpServlet {
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String email = "";
+        try {
+            email = (String) req.getSession().getAttribute("email");
+        } catch (NullPointerException e) {
+//            req.getRequestDispatcher("/index.jsp").forward(req, resp);
+            resp.sendRedirect("/index.jsp");
+        }
 
+        HttpSession s = req.getSession();
+
+        PostDTO postDTO = new PostDTO();
+        postDTO.setPostId(1);
+        postDTO.setDescription(req.getParameter("blog-desc"));
+        postDTO.setEmailId(email);
+        postDTO.setTag(req.getParameter("blog-tag"));
+        postDTO.setTitle(req.getParameter("blog-title"));
+        postDTO.setTimestamp(LocalDateTime.now());
+
+        System.out.println(postDTO);
+        req.setAttribute("postDTO", postDTO);
+        req.getRequestDispatcher("/ublog/View.jsp").forward(req,resp);
+    }
 }

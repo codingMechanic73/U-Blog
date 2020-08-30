@@ -14,6 +14,21 @@
 	(Hint: Make use of the email id stored in the session object to check if user is logged in or not.)
 -->
 
+<%!
+    String email = "";
+    String userName = "";
+%>
+
+<%
+    try {
+        email = (String)session.getAttribute("email");
+        int endIndex = email.indexOf("@");
+        userName = email.substring(0, endIndex);
+    } catch (NullPointerException e) {
+        response.sendRedirect("/index.jsp");
+    }
+%>
+
 <!--
 	TODO: 4.16. Design the "Create Post" page with the following properties.
 	    1. Title of the page should be "Create Post"
@@ -34,6 +49,57 @@
         11. Provide "Post" submit button.
         12. Provide a link to the "Home Page".
 -->
+
+<html>
+<head>
+    <title>Create Post</title>
+</head>
+<body>
+    <span>Logged in as </span> <%=userName %>
+    </br>
+    </br>
+    <form action="/ublog/post" method="POST">
+        <table>
+            <tr>
+                <td>
+                <label for="email">User Email:</label>
+                </td>
+                <td>
+                <%=email %>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                <label for="blog-title">Blog Title:</label>
+                </td>
+                <td>
+                <input type="text" placeholder="Title" name="blog-title" maxlength="200" required/>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                <label for="blog-tag">Blog Tag:</label>
+                </td>
+                <td>
+                <input type="text" placeholder="java" name="blog-tag" maxlength="10" required/>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                <label for="blog-desc">Blog Description:</label>
+                </td>
+                <td>
+                <textarea name="blog-desc" rows="15" cols="75" maxlength="1000" required></textarea>
+                </td>
+            </tr>
+            </form>
+        </table>
+        <input type="submit" value="Post" />
+        <a href="/Home.jsp">Home Page</a>
+    </form>
+</body>
+</html>
+
 
 <!--
     TODO: 4.17. If the user is logged in then display the string before @ in the user email id

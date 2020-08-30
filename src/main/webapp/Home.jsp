@@ -14,6 +14,20 @@
 	(Hint: Make use of the email id stored in the session object to check if user is logged in or not.)
 -->
 
+<%!
+    String userName = "";
+%>
+
+<%
+    try {
+        String email = (String)session.getAttribute("email");
+        int endIndex = email.indexOf("@");
+        userName = email.substring(0, endIndex);
+    } catch (NullPointerException e) {
+        response.sendRedirect("/index.jsp");
+    }
+%>
+
 <!--
 	TODO: 4.14. Design the "Home" page with the following properties.
 	    1. Title of the page should be "Home Page"
@@ -24,3 +38,26 @@
 	        and Logout.jsp page. They should be provided in the same order as shown on the learn platform with
 	        some spacing between them.
 -->
+
+<html>
+<head>
+    <title>Home Page</title>
+</head>
+
+<body>
+    <pre>
+    Logged in as <%=userName %>
+
+
+    <a href="/ublog/Create.jsp">Create</a>
+
+    <a href="/ublog/Search.jsp">Search</a>
+
+    <a href="/ublog/Delete.jsp">Delete</a>
+
+    <a href="/ublog/Filter.jsp">Filter</a>
+
+    <a href="/Logout.jsp">Logout</a>
+    </pre>
+</body>
+</html>

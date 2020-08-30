@@ -29,6 +29,17 @@ package com.upgrad.ublog.servlets;
  * TODO: 5.6: Remove the same mapping from the Deployment Descriptor otherwise, you will get an error.
  */
 
+import com.upgrad.ublog.exceptions.EmailNotValidException;
+import com.upgrad.ublog.utils.EmailValidator;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.IOException;
+
 /**
  * TODO: 6.16. When the user click on the Sign In button on the Sign In/ Sign Up page, handle the
  *  following scenarios. (Hint: Use ServiceFactory to get UserService. Override the init() method
@@ -53,6 +64,43 @@ package com.upgrad.ublog.servlets;
  *   message stored in the exception object and display the same message on the index.jsp page.
  */
 
-public class UserServlet {
+public class UserServlet extends HttpServlet {
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String email = req.getParameter("email");
+        String password = req.getParameter("password");
+        String buttonType = req.getParameter("buttonType");
 
+
+        if (password == null || password.isEmpty()) {
+            req.setAttribute("passwordError", "Password is a required field");
+            RequestDispatcher requestDispatcher = req.getRequestDispatcher("/index.jsp");
+            requestDispatcher.forward(req, resp);
+        } else {
+            HttpSession session = req.getSession();
+            try {
+                if (session.getAttribute("email").equals(email)) {
+//                    req.getRequestDispatcher("/Home.jsp").forward(req, resp);
+                    resp.sendRedirect("/Home.jsp");
+                }
+            } catch (Exception e) {
+            }
+
+
+            if (buttonType.equals("Sign In")) {
+                System.out.println("User Signed In");
+                System.out.println(email);
+                session.setAttribute("email", email);
+                resp.sendRedirect("/Home.jsp");
+//                req.getRequestDispatcher("/Home.jsp").forward(req, resp);
+
+            } else if (buttonType.equals("Sign Up")) {
+                System.out.println("User Signed Up");
+                System.out.println(email);
+                session.setAttribute("email", email);
+                resp.sendRedirect("/Home.jsp");
+//                req.getRequestDispatcher("/Home.jsp").forward(req, resp);
+            }
+        }
+    }
 }
