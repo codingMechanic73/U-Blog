@@ -48,7 +48,7 @@
                         <label for="email">User Email:</label>
                     </td>
                     <td>
-                        <input type="email" name="email" placeholder="example@email.com" required />
+                        <input type="text" name="email" placeholder="example@email.com" />
                     </td>
                 </tr>
                 <tr>
@@ -76,7 +76,7 @@
 -->
 <%! String error = ""; %>
 <%
-    error = (String)request.getAttribute("passwordError");
+    error = (String)request.getAttribute("error");
     if (error == null) {error = "";}
 %>
 

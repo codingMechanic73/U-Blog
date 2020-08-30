@@ -8,7 +8,7 @@ package com.upgrad.ublog.exceptions;
 
 public class EmailNotValidException extends Exception{
 
-    EmailNotValidException(String message) {
+    public EmailNotValidException(String message) {
         super(message);
     }
 

@@ -34,6 +34,7 @@ import com.upgrad.ublog.utils.EmailValidator;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -64,12 +65,21 @@ import java.io.IOException;
  *   message stored in the exception object and display the same message on the index.jsp page.
  */
 
+@WebServlet("/ublog/user")
 public class UserServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String email = req.getParameter("email");
         String password = req.getParameter("password");
         String buttonType = req.getParameter("buttonType");
+
+        try {
+            EmailValidator.isValidEmail(email);
+        } catch (EmailNotValidException e) {
+            req.setAttribute("error", "Please provide valid email address");
+            req.getRequestDispatcher("/index.jsp").forward(req,resp);
+            return;
+        }
 
 
         if (password == null || password.isEmpty()) {

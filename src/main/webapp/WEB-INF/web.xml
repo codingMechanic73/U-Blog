@@ -11,26 +11,6 @@
     -->
 
     <servlet>
-        <servlet-name>user</servlet-name>
-        <servlet-class>com.upgrad.ublog.servlets.UserServlet</servlet-class>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>user</servlet-name>
-        <url-pattern>/ublog/user</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
-        <servlet-name>post</servlet-name>
-        <servlet-class>com.upgrad.ublog.servlets.PostServlet</servlet-class>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>post</servlet-name>
-        <url-pattern>/ublog/post</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
         <servlet-name>util</servlet-name>
         <servlet-class>com.upgrad.ublog.servlets.PostUtilServlet</servlet-class>
     </servlet>
