@@ -1,5 +1,10 @@
 package com.upgrad.ublog.services;
 
+import com.upgrad.ublog.dao.PostDAO;
+import com.upgrad.ublog.dao.PostDAOImpl;
+import com.upgrad.ublog.dao.UserDAO;
+import com.upgrad.ublog.dao.UserDAOImpl;
+
 /**
  * TODO: 6.14. Provide a factory method which returns PostServiceImpl object. (Hint: Return type
  *  of this method should be PostService. You will implement the PostService interface to the PostServiceImpl
@@ -10,5 +15,11 @@ package com.upgrad.ublog.services;
  */
 
 public class ServiceFactory {
+    public PostService getPostService() {
+        return PostServiceImpl.getInstance();
+    }
 
+    public UserService getUserService() {
+        return UserServiceImpl.getInstance();
+    }
 }

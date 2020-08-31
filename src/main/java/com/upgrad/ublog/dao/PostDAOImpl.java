@@ -33,6 +33,14 @@ package com.upgrad.ublog.dao;
  *  without setting any of its attributes.
  */
 
+import com.upgrad.ublog.db.DatabaseConnection;
+import com.upgrad.ublog.dto.PostDTO;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.List;
+
 /**
  * TODO: 7.22. Implement findAllTags() method which returns a list of all unique tags in the UBLOG_POSTS
  *  table.
@@ -40,6 +48,62 @@ package com.upgrad.ublog.dao;
  *  posts corresponding to the input "tag" from the UBLOG_POSTS table defined in the database.
  */
 
-public class PostDAOImpl {
+public class PostDAOImpl implements PostDAO{
 
+    private PostDAOImpl() {}
+
+    private static PostDAOImpl postDAO;
+
+    public static PostDAO getInstance() {
+        if (postDAO == null) {
+            postDAO = new PostDAOImpl();
+        }
+        return postDAO;
+    }
+
+
+    @Override
+    public PostDTO create(PostDTO postDTO) throws SQLException {
+        //oracle
+        String oracleQuery = "INSERT INTO UBLOG_POSTS(email_id, title, description, tag, timestamp) VALUES (?, ?, ?, ?, ?);";
+        //mySql
+        String mySQLQuery = "INSERT INTO UBLOG_POSTS(email_id, title, description, tag, timestamp) VALUES (?, ?, ?, ?, ?);";
+
+        Connection con = DatabaseConnection.getConnection();
+        PreparedStatement st = con.prepareStatement(mySQLQuery);
+        st.setString(1, postDTO.getEmailId());
+        st.setString(2, postDTO.getTitle());
+        st.setString(3, postDTO.getDescription());
+        st.setString(4, postDTO.getTag());
+        st.setString(5, postDTO.getTimestamp().toString());
+
+
+
+        return postDTO;
+    }
+
+    @Override
+    public List<PostDTO> findByEmail(String emailId) throws SQLException {
+        return null;
+    }
+
+    @Override
+    public List<PostDTO> findByTag(String tag) throws SQLException {
+        return null;
+    }
+
+    @Override
+    public PostDTO findById(int id) throws SQLException {
+        return null;
+    }
+
+    @Override
+    public List<String> findAllTags() throws SQLException {
+        return null;
+    }
+
+    @Override
+    public boolean deleteById(int id) throws SQLException {
+        return false;
+    }
 }

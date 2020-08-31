@@ -41,6 +41,8 @@ package com.upgrad.ublog.servlets;
  */
 
 import com.upgrad.ublog.dto.PostDTO;
+import com.upgrad.ublog.services.PostService;
+import com.upgrad.ublog.services.ServiceFactory;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -60,6 +62,14 @@ import java.time.LocalDateTime;
 
 @WebServlet("/ublog/post")
 public class PostServlet extends HttpServlet {
+
+    PostService postService;
+    @Override
+    public void init() throws ServletException {
+        ServiceFactory serviceFactory = new ServiceFactory();
+        postService = serviceFactory.getPostService();
+    }
+
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String email = "";
@@ -70,8 +80,6 @@ public class PostServlet extends HttpServlet {
             resp.sendRedirect("/index.jsp");
         }
 
-        HttpSession s = req.getSession();
-
         PostDTO postDTO = new PostDTO();
         postDTO.setPostId(1);
         postDTO.setDescription(req.getParameter("blog-desc"));
@@ -80,7 +88,12 @@ public class PostServlet extends HttpServlet {
         postDTO.setTitle(req.getParameter("blog-title"));
         postDTO.setTimestamp(LocalDateTime.now());
 
-        System.out.println(postDTO);
+        try {
+            postService.save(postDTO);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         req.setAttribute("postDTO", postDTO);
         req.getRequestDispatcher("/ublog/View.jsp").forward(req,resp);
     }

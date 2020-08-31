@@ -2,21 +2,37 @@ package com.upgrad.ublog.servlets;
 
 /**
  * TODO: 4.5. Modify the class definition to make it a Servlet class (through inheritance) and
- *  override doPost() method from the base class.
+ * override doPost() method from the base class.
  * TODO: 4.6. Retrieve the values of form attributes defined in the index.jsp file
  * TODO: 4.7. Check if password is empty or null. If empty or null, then redirect to
- *  the index.jsp file with an error message "Password is a required field".
- *  (Hint: Store the error message as an attribute inside the request object before redirecting
- *  to the index.jsp. This error message will be displayed in the index.jsp page when this
- *  error arises.)
+ * the index.jsp file with an error message "Password is a required field".
+ * (Hint: Store the error message as an attribute inside the request object before redirecting
+ * to the index.jsp. This error message will be displayed in the index.jsp page when this
+ * error arises.)
  * TODO: 4.8. If Sign In button is clicked, print "User Signed In" with the user
- *  details on the console. Also, store the email id in the session object.
+ * details on the console. Also, store the email id in the session object.
  * TODO: 4.9. If Sign Up button is clicked, then print "User Signed Up" with the
- *  user details on the console. Also, store the email id in the session object.
+ * user details on the console. Also, store the email id in the session object.
  * TODO: 4.10. Check if the user is logged in or not. If yes, then redirect them
- *  to the Home.jsp file. (Hint: Make use of the email id stored in the session object to check if
- *  the user is logged in or not. This email id should be stored in the session object when the user
- *  successfully sign in or sign up.)
+ * to the Home.jsp file. (Hint: Make use of the email id stored in the session object to check if
+ * the user is logged in or not. This email id should be stored in the session object when the user
+ * successfully sign in or sign up.)
+ * <p>
+ * TODO: 5.4. Validate the email id that is retrieved from the request object using the
+ * EmailValidator class. If the email is not valid, then redirect the user to the Sign In/
+ * Sign Up page with the error message that is stored in the EmailNotValidException. This error
+ * message should be displayed on the index.jsp page.
+ * Note: Add the return statement after you redirect to the index.jsp page, otherwise you may get error
+ * TODO: 5.5. Map this Servlet to "/ublog/user" url using the @WebServlet annotation.
+ * TODO: 5.6: Remove the same mapping from the Deployment Descriptor otherwise, you will get an error.
+ * <p>
+ * TODO: 5.4. Validate the email id that is retrieved from the request object using the
+ * EmailValidator class. If the email is not valid, then redirect the user to the Sign In/
+ * Sign Up page with the error message that is stored in the EmailNotValidException. This error
+ * message should be displayed on the index.jsp page.
+ * Note: Add the return statement after you redirect to the index.jsp page, otherwise you may get error
+ * TODO: 5.5. Map this Servlet to "/ublog/user" url using the @WebServlet annotation.
+ * TODO: 5.6: Remove the same mapping from the Deployment Descriptor otherwise, you will get an error.
  */
 
 /**
@@ -29,8 +45,12 @@ package com.upgrad.ublog.servlets;
  * TODO: 5.6: Remove the same mapping from the Deployment Descriptor otherwise, you will get an error.
  */
 
+import com.upgrad.ublog.dto.UserDTO;
 import com.upgrad.ublog.exceptions.EmailNotValidException;
+import com.upgrad.ublog.services.ServiceFactory;
+import com.upgrad.ublog.services.UserService;
 import com.upgrad.ublog.utils.EmailValidator;
+import oracle.net.aso.q;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -39,7 +59,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.xml.registry.infomodel.User;
 import java.io.IOException;
+import java.util.Calendar;
 
 /**
  * TODO: 6.16. When the user click on the Sign In button on the Sign In/ Sign Up page, handle the
@@ -65,8 +87,17 @@ import java.io.IOException;
  *   message stored in the exception object and display the same message on the index.jsp page.
  */
 
+
 @WebServlet("/ublog/user")
 public class UserServlet extends HttpServlet {
+    UserService userService;
+
+    @Override
+    public void init() throws ServletException {
+        ServiceFactory serviceFactory = new ServiceFactory();
+        userService = serviceFactory.getUserService();
+    }
+
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String email = req.getParameter("email");
@@ -77,40 +108,68 @@ public class UserServlet extends HttpServlet {
             EmailValidator.isValidEmail(email);
         } catch (EmailNotValidException e) {
             req.setAttribute("error", "Please provide valid email address");
-            req.getRequestDispatcher("/index.jsp").forward(req,resp);
+            req.getRequestDispatcher("/index.jsp").forward(req, resp);
             return;
         }
 
-
         if (password == null || password.isEmpty()) {
-            req.setAttribute("passwordError", "Password is a required field");
+            req.setAttribute("error", "Password is a required field");
             RequestDispatcher requestDispatcher = req.getRequestDispatcher("/index.jsp");
             requestDispatcher.forward(req, resp);
-        } else {
-            HttpSession session = req.getSession();
-            try {
-                if (session.getAttribute("email").equals(email)) {
-//                    req.getRequestDispatcher("/Home.jsp").forward(req, resp);
-                    resp.sendRedirect("/Home.jsp");
+            return;
+        }
+        try {
+            switch (buttonType) {
+
+                case "Sign Up": {
+                    System.out.println();
+
+                    if (userService.getUser(email).equals(email)) {
+                        req.setAttribute("error", "A user with this email address already exists!");
+                        req.getRequestDispatcher("/index.jsp").forward(req, resp);
+                        return;
+                    } else {
+                        System.out.println("User Signed Up");
+                        System.out.println(email);
+                        UserDTO userDTO = new UserDTO();
+                        userDTO.setUserId(1);
+                        userDTO.setEmailId(email);
+                        userDTO.setPassword(password);
+                        userService.saveUser(userDTO);
+                        break;
+                    }
                 }
-            } catch (Exception e) {
+                case "Sign In": {
+                    UserDTO user = userService.getUser(email);
+                    if (user.getEmailId() == null) {
+                        req.setAttribute("error", "No user registered with the given email address!");
+                        req.getRequestDispatcher("/index.jsp").forward(req, resp);
+                        return;
+                    } else if (user.getEmailId().equals(email)) {
+                        if (user.getPassword().equals(password)) {
+                            System.out.println("User Signed In");
+                            System.out.println(email);
+                            break;
+                        } else {
+                            req.setAttribute("error", "Please enter valid credentials");
+                            RequestDispatcher requestDispatcher = req.getRequestDispatcher("/index.jsp");
+                            requestDispatcher.forward(req, resp);
+                            return;
+                        }
+                    }
+                }
             }
 
+            HttpSession session = req.getSession();
+            session.setAttribute("email", email);
+            // req.getRequestDispatcher("/Home.jsp").forward(req, resp);
+            resp.sendRedirect("/Home.jsp");
 
-            if (buttonType.equals("Sign In")) {
-                System.out.println("User Signed In");
-                System.out.println(email);
-                session.setAttribute("email", email);
-                resp.sendRedirect("/Home.jsp");
-//                req.getRequestDispatcher("/Home.jsp").forward(req, resp);
-
-            } else if (buttonType.equals("Sign Up")) {
-                System.out.println("User Signed Up");
-                System.out.println(email);
-                session.setAttribute("email", email);
-                resp.sendRedirect("/Home.jsp");
-//                req.getRequestDispatcher("/Home.jsp").forward(req, resp);
-            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            req.setAttribute("error", e.getMessage().toString());
+            // req.getRequestDispatcher("/Home.jsp").forward(req, resp);
+            req.getRequestDispatcher("/index.jsp").forward(req, resp);
         }
     }
 }
