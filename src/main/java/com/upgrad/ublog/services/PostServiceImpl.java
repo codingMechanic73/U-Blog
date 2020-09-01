@@ -69,7 +69,7 @@ import java.util.Set;
  *  with a message "Some unexpected error occurred!"
  */
 
-public class PostServiceImpl implements PostService{
+public class PostServiceImpl implements PostService {
 
     private static DAOFactory daoFactory;
     private static PostServiceImpl postService;

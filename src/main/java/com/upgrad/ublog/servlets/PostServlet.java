@@ -42,8 +42,12 @@ package com.upgrad.ublog.servlets;
 
 import com.upgrad.ublog.dto.PostDTO;
 import com.upgrad.ublog.services.PostService;
+import com.upgrad.ublog.services.PostServiceImpl;
 import com.upgrad.ublog.services.ServiceFactory;
+import com.upgrad.ublog.utils.DateTimeFormatter;
+import com.upgrad.ublog.utils.LogWriter;
 
+import javax.enterprise.inject.New;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -90,6 +94,12 @@ public class PostServlet extends HttpServlet {
 
         try {
             postService.save(postDTO);
+            String log = DateTimeFormatter.format(postDTO.getTimestamp())
+                + "\t New post with title " + postDTO.getTitle() +
+                    " created by " + postDTO.getEmailId();
+
+            Thread logThread = new LogWriter(log, System.getProperty("user.dir"));
+            logThread.start();
 
         } catch (Exception e) {
             e.printStackTrace();
