@@ -11,36 +11,20 @@
     response.setDateHeader("Expires", 0);
 %>
 
-<!--
-	TODO: 7.3. Check if user is logged in or not. If not then redirect user to the default page i.e index.jsp.
-	(Hint: You need to handle NullPointerException.)
-	(Hint: Make use of the email id stored in the session object to check if user is logged in or not.)
--->
 <%!
-    String email = "";
     String userName = "";
 %>
 
 <%
     try {
-        email = (String)session.getAttribute("email");
+        String email = (String)session.getAttribute("email");
         int endIndex = email.indexOf("@");
         userName = email.substring(0, endIndex);
     } catch (NullPointerException e) {
         response.sendRedirect("/index.jsp");
     }
 %>
-<!--
-	TODO: 7.4. Design the "Search Post" page with the following properties.
-	    1. Title of the page should be "Search Post"
-	    2. Provide method and action attributes of the form tag such that when user submit
-	        the form, the doPost() method of PostUtilServlet get invoked.
-	    3. Provide "User Email:" label along with the text field as shown on the learn platform.
-	    4. Also, for the "User Email:" text field, provide type as email, placeholder as
-	        "example@email.com" and make this field required.
-	    5. Provide a "Search" submit button.
-        6. Provide a link to the "Home Page".
--->
+
 <htm>
 <head>
     <title>Search Post</title>
@@ -56,14 +40,19 @@
                     <label for="email">User Email:</label>
                 </td>
                 <td>
-                    <input placeholder="example@email.com" required type="email" name="email" />
+                    <input placeholder="example@email.com" required type="email" name="sEmail" />
                 </td>
             </tr>
         </table>
         <input type="submit" value="Search" name="requestFrom"/>
         <a href="/Home.jsp">Home Page</a>
     </form>
-
+<%! String error = ""; %>
+<%
+    error = (String)request.getAttribute("error");
+    if (error == null) {error = "";}
+%>
+<%=error %>
 
     <%
         List<PostDTO> posts = (List<PostDTO>) request.getAttribute("posts");
@@ -128,26 +117,3 @@
 </body>
 
 </html>
-
-<%! String error = ""; %>
-<%
-    error = (String)request.getAttribute("error");
-    if (error == null) {error = "";}
-%>
-
-<%=error %>
-
-<!--
-    TODO: 7.5. If the user is logged in then display the string before @ in the user email id
-    on this web page. For example, if email id is example@gmail.com, then display "Logged In as example"
-    in the top left corner of the web page as shown on the learn platform.
--->
-
-<!--
-    TODO: 7.11. Check if there exists an error message in the request object. If so, then display the message
-    below the Search button.
-    TODO: 7.12. Check if posts exist in the request object. If so, then display the posts as shown on the learn
-    platform.
-     Note: Use the table tag to align the fields.
-     Note: Try to provide a horizontal rule or some spacing between the posts as shown on the learn platform.
--->
