@@ -55,7 +55,9 @@ package com.upgrad.ublog.services;
 
 import com.upgrad.ublog.dao.DAOFactory;
 import com.upgrad.ublog.dto.PostDTO;
+import com.upgrad.ublog.exceptions.PostNotFoundException;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -90,21 +92,30 @@ public class PostServiceImpl implements PostService{
 
     @Override
     public List<PostDTO> getPostsByEmail(String emailId) throws Exception {
-        return null;
+        return daoFactory.getPostDAO().findByEmail(emailId);
     }
 
     @Override
     public List<PostDTO> getPostsByTag(String tag) throws Exception {
-        return null;
+        return daoFactory.getPostDAO().findByTag(tag);
     }
 
     @Override
     public Set<String> getAllTags() throws Exception {
-        return null;
+        List<String> tags = daoFactory.getPostDAO().findAllTags();
+        Set<String> uniqueTags = new HashSet<>(tags);
+        return uniqueTags;
     }
 
     @Override
     public boolean deletePost(int id, String emailId) throws Exception {
-        return false;
+        PostDTO post = daoFactory.getPostDAO().findById(id);
+        if (post == null) {
+            throw new PostNotFoundException("No Post exist with the given Post Id");
+        } else if (post.getEmailId().equals(emailId)) {
+            return daoFactory.getPostDAO().deleteById(id);
+        } else {
+            return false;
+        }
     }
 }

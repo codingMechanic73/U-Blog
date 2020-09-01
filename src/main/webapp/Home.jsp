@@ -45,19 +45,12 @@
 </head>
 
 <body>
-    <pre>
-    Logged in as <%=userName %>
-
-
-    <a href="/ublog/Create.jsp">Create</a>
-
-    <a href="/ublog/Search.jsp">Search</a>
-
-    <a href="/ublog/Delete.jsp">Delete</a>
-
-    <a href="/ublog/Filter.jsp">Filter</a>
-
+    Logged In as <%=userName %>
+    </br> </br>
+    <a href="/ublog/Create.jsp">Create Post</a> </br></br>
+    <a href="/ublog/Search.jsp">Search Post</a> </br></br>
+    <a href="/ublog/Delete.jsp">Delete Post</a> </br></br>
+    <a href="/ublog/Filter.jsp">Filter Post</a> </br></br>
     <a href="/Logout.jsp">Logout</a>
-    </pre>
 </body>
 </html>

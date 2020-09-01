@@ -1,5 +1,6 @@
 <%@ page import="com.upgrad.ublog.dto.PostDTO" %>
 <%@ page import="com.upgrad.ublog.utils.DateTimeFormatter" %>
+<%@ page import="java.util.List" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <%
@@ -57,13 +58,13 @@
     <title>View Post After Creation</title>
 </head>
 <body>
-    <span>Logged in as </span> <%=userName %>
+    Logged In as <%=userName %>
     </br>
     </br>
     <table>
         <tr>
             <td>
-            <label for="email">User Email:</label>
+            <label for="email">Email Id:</label>
             </td>
             <td>
             <span name="email"><%=postDTO.getEmailId()%> </span>
@@ -71,7 +72,7 @@
         </tr>
         <tr>
             <td>
-            <label for="blog-title">Blog Title:</label>
+            <label for="blog-title">Title:</label>
             </td>
             <td>
             <span name="blog-title"><%=postDTO.getTitle()%> </span>
@@ -79,7 +80,7 @@
         </tr>
         <tr>
             <td>
-            <label for="blog-tag">Blog Tag:</label>
+            <label for="blog-tag">Tag:</label>
             </td>
             <td>
             <span name="blog-tag"><%=postDTO.getTag()%> </span>
@@ -87,7 +88,7 @@
         </tr>
         <tr>
             <td>
-            <label for="blog-desc">Blog Description:</label>
+            <label for="blog-desc">Description:</label>
             </td>
             <td>
             <span name="blog-desc"><%=postDTO.getDescription()%> </span>
@@ -95,15 +96,16 @@
         </tr>
          <tr>
             <td>
-            <label for="blog-time">Blog Description:</label>
+            <label for="blog-time">Time:</label>
             </td>
             <td>
-            <span name="blog-time"><%=postDTO.getTimestamp().toString()%> </span>
+            <span name="blog-time">
+                <%=DateTimeFormatter.format(postDTO.getTimestamp()) %>
             </td>
         </tr>
         </form>
     </table>
-    <a href="/Home.jsp">Home</a>
+    <a href="/Home.jsp">Home Page</a>
 </body>
 </html>
 

@@ -21,6 +21,7 @@ public class PostDTO {
     private String  title;
     private String  description;
     private LocalDateTime timestamp;
+    private String stringTimestamp;
 
     public int getPostId() {
         return postId;
@@ -68,6 +69,14 @@ public class PostDTO {
 
     public void setTimestamp(LocalDateTime timestamp) {
         this.timestamp = timestamp;
+    }
+
+    public String getStringTimestamp() {
+        return this.stringTimestamp;
+    }
+
+    public void setStringTimestamp(String stringTimestamp) {
+        this.stringTimestamp = stringTimestamp;
     }
 
     /*

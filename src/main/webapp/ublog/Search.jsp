@@ -16,7 +16,20 @@
 	(Hint: You need to handle NullPointerException.)
 	(Hint: Make use of the email id stored in the session object to check if user is logged in or not.)
 -->
+<%!
+    String email = "";
+    String userName = "";
+%>
 
+<%
+    try {
+        email = (String)session.getAttribute("email");
+        int endIndex = email.indexOf("@");
+        userName = email.substring(0, endIndex);
+    } catch (NullPointerException e) {
+        response.sendRedirect("/index.jsp");
+    }
+%>
 <!--
 	TODO: 7.4. Design the "Search Post" page with the following properties.
 	    1. Title of the page should be "Search Post"
@@ -28,6 +41,101 @@
 	    5. Provide a "Search" submit button.
         6. Provide a link to the "Home Page".
 -->
+<htm>
+<head>
+    <title>Search Post</title>
+</head>
+<body>
+    Logged In as <%=userName %>
+    </br>
+    </br>
+    <form action="/ublog/post/util" method="POST">
+        <table>
+            <tr>
+                <td>
+                    <label for="email">User Email:</label>
+                </td>
+                <td>
+                    <input placeholder="example@email.com" required type="email" name="email" />
+                </td>
+            </tr>
+        </table>
+        <input type="submit" value="Search" name="requestFrom"/>
+        <a href="/Home.jsp">Home Page</a>
+    </form>
+
+
+    <%
+        List<PostDTO> posts = (List<PostDTO>) request.getAttribute("posts");
+        if (posts != null) {
+        for (PostDTO post: posts) { %>
+            <div>
+                 <table>
+                    <tr>
+                         <td>
+                         <label for="postId">Post Id:</label>
+                         </td>
+                         <td>
+                         <%=post.getPostId() %>
+                         </td>
+                     </tr>
+                    <tr>
+                        <td>
+                        <label for="email">Email Id:</label>
+                        </td>
+                        <td>
+                        <%=post.getEmailId() %>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                        <label for="blog-title">Title:</label>
+                        </td>
+                        <td>
+                            <%=post.getTitle() %>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                        <label for="blog-tag">Tag:</label>
+                        </td>
+                        <td>
+                            <%=post.getTag() %>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                        <label for="blog-desc">Description:</label>
+                        </td>
+                        <td>
+                            <%=post.getDescription() %>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                        <label for="timestamp">Time:</label>
+                        </td>
+                        <td>
+                            <%=DateTimeFormatter.format(post.getTimestamp()) %>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <hr>
+       <% }
+       }
+    %>
+</body>
+
+</html>
+
+<%! String error = ""; %>
+<%
+    error = (String)request.getAttribute("error");
+    if (error == null) {error = "";}
+%>
+
+<%=error %>
 
 <!--
     TODO: 7.5. If the user is logged in then display the string before @ in the user email id

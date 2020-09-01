@@ -8,7 +8,7 @@ package com.upgrad.ublog.exceptions;
 
 public class PostNotFoundException extends Exception{
 
-    PostNotFoundException(String message) {
+    public PostNotFoundException(String message) {
         super(message);
     }
 

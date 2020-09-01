@@ -14,6 +14,21 @@
 	(Hint: Make use of the email id stored in the session object to check if user is logged in or not.)
 -->
 
+<%!
+    String email = "";
+    String userName = "";
+%>
+
+<%
+    try {
+        email = (String)session.getAttribute("email");
+        int endIndex = email.indexOf("@");
+        userName = email.substring(0, endIndex);
+    } catch (NullPointerException e) {
+        response.sendRedirect("/index.jsp");
+    }
+%>
+
 <!--
 	TODO: 7.17. Design the "Delete Post" page with the following properties.
 	    1. Title of the page should be "Delete Post"
@@ -25,6 +40,34 @@
 	    5. Provide a "Delete" submit button.
         6. Provide a link to the "Home Page".
 -->
+
+<html>
+<head>
+    <title>Delete Post</title>
+</head>
+<body>
+    Logged In as <%=userName %>
+    </br> </br>
+    <form action="/ublog/post/util" method="POST">
+        <table>
+            <tr>
+               <label for="postId">Post Id </label>
+            </tr>
+            <tr>
+                <input type="number" min="1" placeholder="Post Id" name="postId" required/>
+            </tr>
+        </table>
+        </br>
+        <input type="submit" value="Delete" name="requestFrom"/>
+        <a href="/Home.jsp">Home Page </a>
+    </form>
+    <%
+     String result = (String)request.getAttribute("DeleteSuccess");
+     if (result == null) {result = "";}
+     %>
+     <%=result %>
+</body>
+</html>
 
 <!--
     TODO: 7.18. If the user is logged in then display the string before @ in the user email id

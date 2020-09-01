@@ -55,7 +55,7 @@
     <title>Create Post</title>
 </head>
 <body>
-    <span>Logged in as </span> <%=userName %>
+    Logged In as <%=userName %>
     </br>
     </br>
     <form action="/ublog/post" method="POST">
@@ -89,7 +89,7 @@
                 <label for="blog-desc">Blog Description:</label>
                 </td>
                 <td>
-                <textarea name="blog-desc" rows="15" cols="75" maxlength="1000" required></textarea>
+                <textarea name="blog-desc" placeholder="Post Description" rows="15" cols="75" maxlength="1000" required></textarea>
                 </td>
             </tr>
             </form>
@@ -106,3 +106,5 @@
     on this web page. For example, if email id is example@gmail.com, then display "Logged In as example"
     in the top left corner of the web page as shown on the learn platform.
 -->
+
+

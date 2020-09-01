@@ -90,6 +90,7 @@ public class PostServlet extends HttpServlet {
 
         try {
             postService.save(postDTO);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
